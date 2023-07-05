@@ -86,7 +86,12 @@ class Weibo(object):
         self.mongodb_URI = config.get("mongodb_URI")  # MongoDB数据库连接字符串，可以不填
         user_id_list = config["user_id_list"]
         # 避免卡住
-        random.shuffle(user_id_list)
+        if isinstance(user_id_list, list):
+            random.shuffle(user_id_list)
+        else:
+            with open(user_id_list, 'r') as f:
+                user_id_list = [line.strip() for line in f]
+            random.shuffle(user_id_list)
         query_list = config.get("query_list") or []
         if isinstance(query_list, str):
             query_list = query_list.split(",")
